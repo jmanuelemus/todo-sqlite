@@ -402,3 +402,10 @@ INSERT INTO todo_users (
     _type, _obj, verified_at, name, password, _created_at
 
 ) VALUES ('Person', 1, datetime('now'), 'jmanuelemus', '$2y$10$aM3M4xfwniFpmvLPI5ztmeT6.VwxU9UYfBN.WVLpjcv3HK/ci9lvq', datetime('now'));
+
+# ---
+
+INSERT INTO todo_projects (
+    _type, _obj, start_date, name, description, _created_at
+
+) VALUES ('User', 1, datetime('2020-08-07 16:30:00'), 'todo-sqlite', 'A ToDo sample application to teach about SQLite.', datetime('now'));

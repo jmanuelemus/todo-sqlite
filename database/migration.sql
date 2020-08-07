@@ -193,3 +193,34 @@ CREATE INDEX todo_places_type    ON todo_places ("_type");
 CREATE INDEX todo_places_uid     ON todo_places ("_uid");
 CREATE INDEX todo_places_adr     ON todo_places ("_adr");
 CREATE INDEX todo_places_lat_lon ON todo_places ("_lat", "_lon");
+
+# ---
+
+CREATE TABLE todo_projects
+(
+    "_id"                  INTEGER        NOT NULL
+        CONSTRAINT todo_project
+            PRIMARY KEY autoincrement,
+
+    "_type"                VARCHAR  ( 32) NOT NULL,
+    "_obj"        UNSIGNED INTEGER        NOT NULL,
+    "_geo"        UNSIGNED INTEGER
+        CONSTRAINT todo_project_geo
+            REFERENCES todo_places
+                ON UPDATE restrict
+                ON DELETE restrict,
+
+    "start_date"           DATETIME,
+    "end_date"             DATETIME,
+    "name"                 VARCHAR  (128) NOT NULL,
+    "description"          TEXT,
+    "_created_at"          DATETIME       NOT NULL,
+    "_updated_at"          DATETIME,
+    "_deleted_at"          DATETIME
+);
+
+CREATE UNIQUE INDEX todo_projects_name ON todo_projects ("_type", "_obj", "name");
+
+CREATE INDEX todo_projects_geo        ON todo_projects ("_geo");
+CREATE INDEX todo_projects_start_date ON todo_projects ("start_date");
+CREATE INDEX todo_projects_end_date   ON todo_projects ("end_date" DESC);
