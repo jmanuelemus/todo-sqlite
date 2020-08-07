@@ -133,3 +133,63 @@ CREATE INDEX todo_addresses_address_locality ON todo_addresses ("address_country
 CREATE INDEX todo_addresses_address_location ON todo_addresses ("address_locality", "address_location");
 CREATE INDEX todo_addresses_street_address   ON todo_addresses ("address_locality", "street_address");
 CREATE INDEX todo_addresses_street_name      ON todo_addresses ("address_locality", "street_number");
+
+# ---
+
+CREATE TABLE todo_places
+(
+    "_id"                                INTEGER           NOT NULL
+        CONSTRAINT todo_place
+            PRIMARY KEY autoincrement,
+
+    "_eq"                       UNSIGNED INTEGER
+        CONSTRAINT todo_place_same_as
+            REFERENCES todo_places
+                ON UPDATE restrict
+                ON DELETE restrict,
+
+    "_sup"                      UNSIGNED INTEGER
+        CONSTRAINT todo_place_contained_in_place
+            REFERENCES todo_places
+                ON UPDATE restrict
+                ON DELETE restrict,
+
+    "_lft"                               INTEGER,
+    "_rgt"                               INTEGER,
+    "_type"                              VARCHAR  (    32) NOT NULL,
+    "_uid"                      UNSIGNED INTEGER
+        CONSTRAINT todo_place_uid
+            REFERENCES todo_users
+                ON UPDATE restrict
+                ON DELETE restrict,
+
+    "_adr"                      UNSIGNED INTEGER
+        CONSTRAINT todo_place_address
+            REFERENCES todo_addresses
+                ON UPDATE restrict
+                ON DELETE restrict,
+
+    "_lat"                               DECIMAL  (8,   6),
+    "_lon"                               DECIMAL  (9,   6),
+    "additional_type"                    VARCHAR,
+    "identifier"                         VARCHAR  (    16),
+    "name"                               VARCHAR  (   255) NOT NULL,
+    "alternate_name"                     VARCHAR  (   128),
+    "floor_number"                       INTEGER,
+    "maximum_attendee_capacity" UNSIGNED INTEGER,
+    "is_accessible_for_free"             BOOLEAN,
+    "public_access"                      BOOLEAN,
+    "smoking_allowed"                    BOOLEAN,
+    "_created_at"                        DATETIME          NOT NULL,
+    "_updated_at"                        DATETIME,
+    "_deleted_at"                        DATETIME
+);
+
+CREATE UNIQUE INDEX todo_places_identifier ON todo_places ("_uid", "_type", "identifier");
+
+CREATE INDEX todo_places_eq      ON todo_places ("_eq");
+CREATE INDEX todo_places_sup     ON todo_places ("_sup");
+CREATE INDEX todo_places_type    ON todo_places ("_type");
+CREATE INDEX todo_places_uid     ON todo_places ("_uid");
+CREATE INDEX todo_places_adr     ON todo_places ("_adr");
+CREATE INDEX todo_places_lat_lon ON todo_places ("_lat", "_lon");
