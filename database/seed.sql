@@ -406,6 +406,6 @@ INSERT INTO todo_users (
 # ---
 
 INSERT INTO todo_projects (
-    _type, _obj, start_date, name, description, _created_at
+    _type, _obj, _uid, start_date, name, description, _created_at
 
-) VALUES ('User', 1, datetime('2020-08-07 16:00:00'), 'todo-sqlite', 'A ToDo sample application to teach about SQLite.', datetime('now'));
+) VALUES ('User', 1, 1, datetime('2020-08-07 16:00:00'), 'todo-sqlite', 'A ToDo sample application to teach about SQLite.', datetime('now'));
