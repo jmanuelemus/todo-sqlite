@@ -274,6 +274,40 @@ CREATE INDEX todo_projects_end_date   ON todo_projects ("end_date" DESC);
 
 # ---
 
+CREATE TABLE todo_reminders
+(
+    "_id"                  INTEGER        NOT NULL
+        CONSTRAINT todo_reminder
+            PRIMARY KEY autoincrement,
+
+    "_sup"        UNSIGNED INTEGER        NOT NULL
+        CONSTRAINT todo_task_uid
+            REFERENCES todo_users
+                ON UPDATE restrict
+                ON DELETE restrict,
+
+    "_type"                VARCHAR  ( 32) NOT NULL,
+    "_obj"        UNSIGNED INTEGER        NOT NULL,
+    "_geo"        UNSIGNED INTEGER
+        CONSTRAINT todo_task_geo
+            REFERENCES todo_places
+                ON UPDATE restrict
+                ON DELETE restrict,
+    
+    "due_date"             DATETIME       NOT NULL,
+    "name"                 VARCHAR  (255) NOT NULL,
+    "_created_at"          DATETIME       NOT NULL,
+    "_updated_at"          DATETIME,
+    "_deleted_at"          DATETIME
+);
+
+CREATE INDEX todo_reminders_sup      ON todo_reminders ("_sup");
+CREATE INDEX todo_reminders_obj      ON todo_reminders ("_obj", "_type");
+CREATE INDEX todo_reminders_geo      ON todo_reminders ("_geo");
+CREATE INDEX todo_reminders_due_date ON todo_reminders ("_sup", "due_date");
+
+# ---
+
 CREATE TABLE todo_tasks
 (
     "_id"                  INTEGER        NOT NULL
