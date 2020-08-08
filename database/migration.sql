@@ -31,6 +31,24 @@ CREATE INDEX todo_administrative_divisions_type            ON todo_administrativ
 
 # ---
 
+CREATE TABLE todo_api_keys
+(
+    "_id"          INTEGER        NOT NULL
+        CONSTRAINT todo_api_key
+            PRIMARY KEY autoincrement,
+
+    "_str"         VARCHAR  (128) NOT NULL,
+    "activated_at" DATETIME,
+    "name"         VARCHAR  ( 32) NOT NULL,
+    "_created_at"  DATETIME       NOT NULL,
+    "_updated_at"  DATETIME,
+    "_deleted_at"  DATETIME
+);
+
+CREATE UNIQUE INDEX todo_api_keys_str ON todo_api_keys ("_str");
+
+# ---
+
 CREATE TABLE todo_emails
 (
     "_id"                  INTEGER       NOT NULL
