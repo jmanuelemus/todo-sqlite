@@ -281,6 +281,31 @@ CREATE INDEX todo_api_tokens_expiration_date ON todo_api_tokens ("expiration_dat
 
 # ---
 
+CREATE TABLE todo_comments
+(
+    "_id"                  INTEGER  NOT NULL
+        CONSTRAINT todo_comment
+            PRIMARY KEY autoincrement,
+
+    "_sup"        UNSIGNED INTEGER  NOT NULL
+        CONSTRAINT todo_comment_author
+            REFERENCES todo_users
+                ON UPDATE restrict
+                ON DELETE restrict,
+
+    "_type"                VARCHAR  NOT NULL,
+    "_obj"        UNSIGNED INTEGER  NOT NULL,
+    "text"                 TEXT     NOT NULL,
+    "_created_at"          DATETIME NOT NULL,
+    "_updated_at"          DATETIME,
+    "_deleted_at"          DATETIME
+);
+
+CREATE INDEX todo_comments_sup  ON todo_comments ("_sup");
+CREATE INDEX todo_comments_type ON todo_comments ("_obj", "_type");
+
+# ---
+
 CREATE TABLE todo_places
 (
     "_id"                                INTEGER           NOT NULL
