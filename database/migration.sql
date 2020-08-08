@@ -220,9 +220,9 @@ CREATE TABLE todo_activities
     "_deleted_at"          DATETIME
 );
 
-CREATE UNIQUE INDEX todo_activities_name ON todo_activities ("_type", "_obj", "name");
+CREATE UNIQUE INDEX todo_activities_name ON todo_activities ("_obj", "_type", "name");
 
-CREATE INDEX todo_activities_pos        ON todo_activities ("_type", "_obj", "_pos");
+CREATE INDEX todo_activities_pos        ON todo_activities ("_obj", "_type", "_pos");
 CREATE INDEX todo_activities_geo        ON todo_activities ("_geo");
 CREATE INDEX todo_activities_start_date ON todo_activities ("start_date");
 CREATE INDEX todo_activities_end_date   ON todo_activities ("end_date" DESC);
@@ -252,7 +252,7 @@ CREATE TABLE todo_projects
     "_deleted_at"          DATETIME
 );
 
-CREATE UNIQUE INDEX todo_projects_name ON todo_projects ("_type", "_obj", "name");
+CREATE UNIQUE INDEX todo_projects_name ON todo_projects ("_obj", "_type", "name");
 
 CREATE INDEX todo_projects_geo        ON todo_projects ("_geo");
 CREATE INDEX todo_projects_start_date ON todo_projects ("start_date");
