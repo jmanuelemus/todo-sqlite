@@ -81,6 +81,25 @@ CREATE INDEX todo_people_name ON todo_people ("family_name", "given_name");
 
 # ---
 
+CREATE TABLE todo_phones
+(
+    "_id"                  INTEGER       NOT NULL
+        CONSTRAINT todo_phone
+            PRIMARY KEY autoincrement,
+
+    "_type"                VARCHAR  (32) NOT NULL,
+    "_obj"        UNSIGNED INTEGER       NOT NULL,
+    "verified_at"          DATETIME,
+    "number"               VARCHAR  (32) NOT NULL,
+    "_created_at"          DATETIME      NOT NULL,
+    "_updated_at"          DATETIME,
+    "_deleted_at"          DATETIME
+);
+
+CREATE UNIQUE INDEX todo_phones_number ON todo_phones ("_obj", "_type", "number");
+
+# ---
+
 CREATE TABLE todo_users
 (
     "_id"                  INTEGER        NOT NULL
