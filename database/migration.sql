@@ -223,6 +223,64 @@ CREATE INDEX todo_addresses_street_name      ON todo_addresses ("address_localit
 
 # ---
 
+CREATE TABLE todo_api_clients
+(
+    "_id"                    INTEGER       NOT NULL
+        CONSTRAINT todo_api_client
+            PRIMARY KEY autoincrement,
+
+    "_sup"          UNSIGNED INTEGER
+        CONSTRAINT todo_api_client_vendor
+            REFERENCES todo_users
+                ON UPDATE restrict
+                ON DELETE restrict,
+
+    "published_at"           DATETIME,
+    "client_id"              VARCHAR  (32) NOT NULL,
+    "client_secret"          VARCHAR  (64) NOT NULL,
+    "name"                   VARCHAR  (64) NOT NULL,
+    "_created_at"            DATETIME      NOT NULL,
+    "_updated_at"            DATETIME,
+    "_deleted_at"            DATETIME
+);
+
+CREATE UNIQUE INDEX todo_api_clients_id   ON todo_api_clients ("client_id");
+CREATE UNIQUE INDEX todo_api_clients_name ON todo_api_clients ("_sup", "name");
+
+# ---
+
+CREATE TABLE todo_api_tokens
+(
+    "_id"                      INTEGER        NOT NULL
+        CONSTRAINT todo_api_token
+            PRIMARY KEY autoincrement,
+
+    "_sup"            UNSIGNED INTEGER        NOT NULL
+        CONSTRAINT todo_api_token_sup
+            REFERENCES todo_users
+                ON UPDATE restrict
+                ON DELETE restrict,
+
+    "_app"            UNSIGNED INTEGER        NOT NULL
+        CONSTRAINT todo_api_token_app
+            REFERENCES todo_api_clients
+                ON UPDATE restrict
+                ON DELETE restrict,
+
+    "_str"                     VARCHAR  (128) NOT NULL,
+    "code"                     INTEGER        NOT NULL,
+    "expiration_date"          DATETIME,
+    "_created_at"              DATETIME       NOT NULL,
+    "_updated_at"              DATETIME,
+    "_deleted_at"              DATETIME
+);
+
+CREATE UNIQUE INDEX todo_api_tokens_str ON todo_api_tokens ("_str");
+
+CREATE INDEX todo_api_tokens_expiration_date ON todo_api_tokens ("expiration_date" DESC);
+
+# ---
+
 CREATE TABLE todo_places
 (
     "_id"                                INTEGER           NOT NULL
