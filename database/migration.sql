@@ -31,6 +31,37 @@ CREATE INDEX todo_administrative_divisions_type            ON todo_administrativ
 
 # ---
 
+CREATE TABLE todo_organizations
+(
+    "_id"                   INTEGER        NOT NULL
+        CONSTRAINT todo_organization
+            PRIMARY KEY autoincrement,
+
+    "_sup"         UNSIGNED INTEGER
+        CONSTRAINT todo_organization_sup
+            REFERENCES todo_organizations
+                ON UPDATE restrict
+                ON DELETE restrict,
+
+    "_cctld"                VARCHAR  (  2)
+        CONSTRAINT todo_organization_cctld
+            REFERENCES todo_administrative_divisions (identifier)
+                ON UPDATE restrict
+                ON DELETE restrict,
+
+    "verified_at"           DATETIME,
+    "name"                  VARCHAR  (255),
+    "_created_at"           DATETIME       NOT NULL,
+    "_updated_at"           DATETIME,
+    "_deleted_at"           DATETIME
+);
+
+CREATE UNIQUE INDEX todo_organizations_name ON todo_organizations ("_cctld", "name");
+
+CREATE INDEX todo_organizations_cctld ON todo_organizations ("_cctld");
+
+# ---
+
 CREATE TABLE todo_people
 (
     "_id"            INTEGER        NOT NULL
