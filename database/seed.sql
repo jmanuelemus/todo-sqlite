@@ -391,6 +391,13 @@ INSERT INTO todo_administrative_divisions (
 
 # ---
 
+INSERT INTO todo_emails (
+    _type, _obj, _str, verified_at, _created_at
+
+) VALUES ('Person', 1, 'github@jmanuelemus.com', datetime('now'), datetime('now'));
+
+# ---
+
 INSERT INTO todo_people(
     verified_at, given_name, family_name, alternate_name, _created_at
 

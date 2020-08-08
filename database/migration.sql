@@ -31,6 +31,25 @@ CREATE INDEX todo_administrative_divisions_type            ON todo_administrativ
 
 # ---
 
+CREATE TABLE todo_emails
+(
+    "_id"                  INTEGER       NOT NULL
+        CONSTRAINT todo_email
+            PRIMARY KEY autoincrement,
+
+    "_type"                VARCHAR  (32) NOT NULL,
+    "_obj"        UNSIGNED INTEGER       NOT NULL,
+    "_str"                 VARCHAR  (64) NOT NULL,
+    "verified_at"          DATETIME,
+    "_created_at"          DATETIME      NOT NULL,
+    "_updated_at"          DATETIME,
+    "_deleted_at"          DATETIME
+);
+
+CREATE UNIQUE INDEX todo_emails_str ON todo_emails ("_obj", "_type", "_str");
+
+# ---
+
 CREATE TABLE todo_organizations
 (
     "_id"                   INTEGER        NOT NULL
