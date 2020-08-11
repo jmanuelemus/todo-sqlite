@@ -118,6 +118,22 @@ CREATE INDEX todo_people_name ON todo_people ("family_name", "given_name");
 
 # ---
 
+CREATE TABLE todo_permissions
+(
+    "_id"         INTEGER       NOT NULL
+        CONSTRAINT todo_permission
+            PRIMARY KEY autoincrement,
+    
+    "name"        VARCHAR  (32) NOT NULL,
+    "_created_at" DATETIME      NOT NULL,
+    "_updated_at" DATETIME,
+    "_deleted_at" DATETIME
+);
+
+CREATE UNIQUE INDEX todo_permissions_name ON todo_permissions ("name");
+
+# ---
+
 CREATE TABLE todo_phones
 (
     "_id"                  INTEGER       NOT NULL
@@ -134,6 +150,51 @@ CREATE TABLE todo_phones
 );
 
 CREATE UNIQUE INDEX todo_phones_number ON todo_phones ("_obj", "_type", "number");
+
+# ---
+
+CREATE TABLE todo_roles
+(
+    "_id"                  INTEGER       NOT NULL
+        CONSTRAINT todo_role
+            PRIMARY KEY autoincrement,
+
+    "_type"                VARCHAR  (32) NOT NULL,
+    "_obj"        UNSIGNED INTEGER       NOT NULL,
+    "name"                 VARCHAR  (64) NOT NULL,
+    "_created_at"          DATETIME      NOT NULL,
+    "_updated_at"          DATETIME,
+    "_deleted_at"          DATETIME
+);
+
+CREATE UNIQUE INDEX todo_roles_name ON todo_roles ("_obj", "_type", "name");
+
+# ---
+
+CREATE TABLE todo_role_permissions
+(
+    "_id"                  INTEGER  NOT NULL
+        CONSTRAINT todo_role_permission
+            PRIMARY KEY autoincrement,
+
+    "_sup"        UNSIGNED INTEGER  NOT NULL
+        CONSTRAINT todo_role_permission_sup
+            REFERENCES todo_permissions
+                ON UPDATE restrict
+                ON DELETE restrict,
+
+    "_sub"        UNSIGNED INTEGER  NOT NULL
+        CONSTRAINT todo_role_permission_sub
+            REFERENCES todo_roles
+                ON UPDATE restrict
+                ON DELETE restrict,
+
+    "_created_at"          DATETIME NOT NULL,
+    "_updated_at"          DATETIME,
+    "_deleted_at"          DATETIME
+);
+
+CREATE UNIQUE INDEX todo_role_permissions_sub ON todo_role_permissions ("_sup", "_sub");
 
 # ---
 
@@ -515,3 +576,61 @@ CREATE INDEX todo_tasks_geo        ON todo_tasks ("_geo");
 CREATE INDEX todo_tasks_uid        ON todo_tasks ("_uid");
 CREATE INDEX todo_tasks_start_date ON todo_tasks ("start_date");
 CREATE INDEX todo_tasks_end_date   ON todo_tasks ("end_date" DESC);
+
+# ---
+
+CREATE TABLE todo_user_permissions
+(
+    "_id"                  INTEGER       NOT NULL
+        CONSTRAINT todo_user_permission
+            PRIMARY KEY autoincrement,
+
+    "_sup"        UNSIGNED INTEGER       NOT NULL
+        CONSTRAINT todo_user_permission_sup
+            REFERENCES todo_permissions
+                ON UPDATE restrict
+                ON DELETE restrict,
+
+    "_type"                VARCHAR  (32) NOT NULL,
+    "_obj"        UNSIGNED INTEGER       NOT NULL,
+    "_uid"        UNSIGNED INTEGER       NOT NULL
+        CONSTRAINT todo_user_permissions_uid
+            REFERENCES todo_users
+                ON UPDATE restrict
+                ON DELETE restrict,
+
+    "_created_at"          DATETIME      NOT NULL,
+    "_updated_at"          DATETIME,
+    "_deleted_at"          DATETIME
+);
+
+CREATE UNIQUE INDEX todo_user_permissions_sup On todo_user_permissions ("_uid", "_obj", "_type", "_sup");
+
+# ---
+
+CREATE TABLE todo_user_roles
+(
+    "_id"                  INTEGER       NOT NULL
+        CONSTRAINT todo_user_role
+            PRIMARY KEY autoincrement,
+
+    "_sup"        UNSIGNED INTEGER       NOT NULL
+        CONSTRAINT todo_user_role_sup
+            REFERENCES todo_roles
+                ON UPDATE restrict
+                ON DELETE restrict,
+
+    "_type"                VARCHAR  (32) NOT NULL,
+    "_obj"        UNSIGNED INTEGER       NOT NULL,
+    "_uid"        UNSIGNED INTEGER       NOT NULL
+        CONSTRAINT todo_user_role_uid
+            REFERENCES todo_users
+                ON UPDATE restrict
+                ON DELETE restrict,
+
+    "_created_at"          DATETIME      NOT NULL,
+    "_updated_at"          DATETIME,
+    "_deleted_at"          DATETIME
+);
+
+CREATE UNIQUE INDEX todo_user_roles_sup On todo_user_roles ("_uid", "_obj", "_type", "_sup");
