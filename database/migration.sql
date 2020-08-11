@@ -389,6 +389,42 @@ CREATE INDEX todo_comments_type ON todo_comments ("_obj", "_type");
 
 # ---
 
+CREATE TABLE todo_media
+(
+    "_id"                      INTEGER        NOT NULL
+        CONSTRAINT todo_media
+            PRIMARY KEY autoincrement,
+
+    "_sup"            UNSIGNED INTEGER        NOT NULL
+        CONSTRAINT todo_media_publisher
+            REFERENCES todo_users
+                ON UPDATE restrict
+                ON DELETE restrict,
+
+
+    "_type"                    VARCHAR  ( 32),
+    "_obj"            UNSIGNED INTEGER,
+    "_pos"            UNSIGNED INTEGER,
+    "_url"                     VARCHAR  (255) NOT NULL,
+    "additional_type"          VARCHAR  ( 32) NOT NULL,
+    "mime_type"                VARCHAR  ( 32) NOT NULL,
+    "name"                     VARCHAR  (255) NOT NULL,
+    "alternate_name"           VARCHAR  (255),
+    "description"              TEXT,
+    "_created_at"              DATETIME       NOT NULL,
+    "_updated_at"              DATETIME,
+    "_deleted_at"              DATETIME
+);
+
+CREATE UNIQUE INDEX todo_media_url ON todo_media ("_url");
+
+CREATE INDEX todo_media_sup             ON todo_media ("_sup");
+CREATE INDEX todo_media_pos             ON todo_media ("_obj", "_type", "_pos");
+CREATE INDEX todo_media_additional_type ON todo_media ("_obj", "_type", "additional_type");
+CREATE INDEX todo_media_name            ON todo_media ("name");
+
+# ---
+
 CREATE TABLE todo_places
 (
     "_id"                                INTEGER           NOT NULL
