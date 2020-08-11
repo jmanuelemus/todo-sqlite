@@ -405,6 +405,13 @@ INSERT INTO todo_people(
 
 # ---
 
+INSERT INTO todo_urls (
+    _type, _obj, _str, additional_type, _created_at
+
+) VALUES ('Person', 1, 'https://github.com/jmanuelemus', 'GitHub', datetime('now'));
+
+# ---
+
 INSERT INTO todo_users (
     _type, _obj, verified_at, name, password, _created_at
 
