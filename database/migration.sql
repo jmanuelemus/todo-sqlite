@@ -68,6 +68,28 @@ CREATE UNIQUE INDEX todo_emails_str ON todo_emails ("_obj", "_type", "_str");
 
 # ---
 
+CREATE TABLE todo_hour_specifications
+(
+    "_id"                    INTEGER      NOT NULL
+        CONSTRAINT todo_hour_specification
+            PRIMARY KEY autoincrement,
+
+    "_type"                  VARCHAR      NOT NULL,
+    "_obj"          UNSIGNED INTEGER      NOT NULL,
+    "day_of_week"   UNSIGNED TINYINT  (1) NOT NULL,
+    "opens"                  TIME         NOT NULL,
+    "closes"                 TIME         NOT NULL,
+    "valid_from"             DATE,
+    "valid_through"          DATE,
+    "_created_at"            DATETIME     NOT NULL,
+    "_updated_at"            DATETIME,
+    "_deleted_at"            DATETIME
+);
+
+CREATE INDEX todo_hour_specifications_valid_through ON todo_hour_specifications ("_obj", "_type", "day_of_week", "valid_through");
+
+# ---
+
 CREATE TABLE todo_organizations
 (
     "_id"                   INTEGER        NOT NULL
