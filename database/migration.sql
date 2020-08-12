@@ -612,6 +612,39 @@ CREATE INDEX todo_activities_end_date   ON todo_activities ("end_date" DESC);
 
 # ---
 
+CREATE TABLE todo_notifications
+(
+    "_id"                  INTEGER        NOT NULL
+        CONSTRAINT todo_notification
+            PRIMARY KEY autoincrement,
+
+    "_type"                VARCHAR  ( 32) NOT NULL,
+    "_obj"        UNSIGNED INTEGER        NOT NULL,
+    "_geo"        UNSIGNED INTEGER
+        CONSTRAINT todo_notification_geo
+            REFERENCES todo_places
+                ON UPDATE restrict
+                ON DELETE restrict,
+    
+    "_uid"        UNSIGNED INTEGER        NOT NULL
+        CONSTRAINT todo_notification_sup
+            REFERENCES todo_users
+                ON UPDATE restrict
+                ON DELETE restrict,
+
+    "code"        UNSIGNED INTEGER,
+    "text"                 VARCHAR  (255) NOT NULL,
+    "_created_at"          DATETIME       NOT NULL,
+    "_updated_at"          DATETIME,
+    "_deleted_at"          DATETIME
+);
+
+CREATE INDEX todo_notifications_sup        ON todo_notifications ("_sup");
+CREATE INDEX todo_notifications_type       ON todo_notifications ("_obj", "_type");
+CREATE INDEX todo_notifications_created_at ON todo_notifications ("_sup", "_created_at");
+
+# ---
+
 CREATE TABLE todo_passwords
 (
     "_id"                  INTEGER        NOT NULL
