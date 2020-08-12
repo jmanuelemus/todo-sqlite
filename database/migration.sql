@@ -612,6 +612,54 @@ CREATE INDEX todo_activities_end_date   ON todo_activities ("end_date" DESC);
 
 # ---
 
+CREATE TABLE todo_passwords
+(
+    "_id"                  INTEGER        NOT NULL
+        CONSTRAINT todo_password
+            PRIMARY KEY autoincrement,
+
+    "_sup"        UNSIGNED INTEGER        NOT NULL
+        CONSTRAINT todo_password_sup
+            REFERENCES todo_users
+                ON UPDATE restrict
+                ON DELETE restrict,
+
+    "_str"                 VARCHAR  (255) NOT NULL,
+    "_created_at"          DATETIME       NOT NULL,
+    "_updated_at"          DATETIME,
+    "_deleted_at"          DATETIME
+);
+
+CREATE INDEX todo_passwords_sup ON todo_passwords ("_sup");
+
+# ---
+
+CREATE TABLE todo_password_resets
+(
+    "_id"                      INTEGER        NOT NULL
+        CONSTRAINT todo_password_reset
+            PRIMARY KEY autoincrement,
+
+    "_sup"            UNSIGNED INTEGER        NOT NULL
+        CONSTRAINT todo_password_reset_sup
+            REFERENCES todo_users
+                ON UPDATE restrict
+                ON DELETE restrict,
+
+    "code"            UNSIGNED INTEGER        NOT NULL,
+    "token"                    VARCHAR  (128) NOT NULL,
+    "expiration_date"          DATETIME       NOT NULL,
+    "_created_at"              DATETIME       NOT NULL,
+    "_updated_at"              DATETIME,
+    "_deleted_at"              DATETIME
+);
+
+CREATE UNIQUE INDEX todo_password_resets_token ON todo_password_resets ("token");
+
+CREATE INDEX todo_password_resets_sup ON todo_password_resets ("_sup");
+
+# ---
+
 CREATE TABLE todo_projects
 (
     "_id"                  INTEGER        NOT NULL
