@@ -220,6 +220,53 @@ CREATE UNIQUE INDEX todo_role_permissions_sub ON todo_role_permissions ("_sup", 
 
 # ---
 
+CREATE TABLE todo_teams
+(
+    "_id"                  INTEGER       NOT NULL
+        CONSTRAINT todo_team
+            PRIMARY KEY autoincrement,
+
+    "_type"                VARCHAR  (32) NOT NULL,
+    "_obj"        UNSIGNED INTEGER       NOT NULL,
+    "_name"                VARCHAR  (64) NOT NULL,
+    "name"                 VARCHAR  (64) NOT NULL,
+    "_created_at"          DATETIME      NOT NULL,
+    "_updated_at"          DATETIME,
+    "_deleted_at"          DATETIME
+);
+
+CREATE UNIQUE INDEX todo_teams_name ON todo_teams ("_type", "_obj", "name");
+
+# ---
+
+CREATE TABLE todo_team_members
+(
+    "_id"                  INTEGER  NOT NULL
+        CONSTRAINT todo_team_member
+            PRIMARY KEY autoincrement,
+
+    "_sup"        UNSIGNED INTEGER  NOT NULL
+        CONSTRAINT todo_team_member_sup
+            REFERENCES todo_teams
+                ON UPDATE restrict
+                ON DELETE restrict,
+
+    "_uid"        UNSIGNED INTEGER  NOT NULL
+        CONSTRAINT todo_team_member_uid
+            REFERENCES todo_users
+                ON UPDATE restrict
+                ON DELETE restrict,
+
+    "_created_at"          DATETIME NOT NULL,
+    "_updated_at"          DATETIME,
+    "_deleted_at"          DATETIME
+);
+
+CREATE INDEX todo_team_members_sup ON todo_team_members ("_sup");
+CREATE INDEX todo_team_members_uid ON todo_team_members ("_uid");
+
+# ---
+
 CREATE TABLE todo_urls
 (
     "_id"                      INTEGER       NOT NULL
