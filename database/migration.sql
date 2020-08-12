@@ -645,17 +645,17 @@ CREATE TABLE todo_notifications
         CONSTRAINT todo_notification
             PRIMARY KEY autoincrement,
 
+    "_sup"        UNSIGNED INTEGER        NOT NULL
+        CONSTRAINT todo_notification_sup
+            REFERENCES todo_users
+                ON UPDATE restrict
+                ON DELETE restrict,
+
     "_type"                VARCHAR  ( 32) NOT NULL,
     "_obj"        UNSIGNED INTEGER        NOT NULL,
     "_geo"        UNSIGNED INTEGER
         CONSTRAINT todo_notification_geo
             REFERENCES todo_places
-                ON UPDATE restrict
-                ON DELETE restrict,
-    
-    "_uid"        UNSIGNED INTEGER        NOT NULL
-        CONSTRAINT todo_notification_sup
-            REFERENCES todo_users
                 ON UPDATE restrict
                 ON DELETE restrict,
 
