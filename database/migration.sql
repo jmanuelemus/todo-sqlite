@@ -49,6 +49,25 @@ CREATE UNIQUE INDEX todo_api_keys_str ON todo_api_keys ("_str");
 
 # ---
 
+CREATE TABLE todo_attributes
+(
+    "_id"                  INTEGER       NOT NULL
+        CONSTRAINT todo_attribute
+            PRIMARY KEY autoincrement,
+
+    "_type"                VARCHAR  (32) NOT NULL,
+    "_obj"        UNSIGNED INTEGER       NOT NULL,
+    "_att"                 VARCHAR  (64) NOT NULL,
+    "value"                TEXT          NOT NULL,
+    "_created_at"          DATETIME      NOT NULL,
+    "_updated_at"          DATETIME,
+    "_deleted_at"          DATETIME
+);
+
+CREATE UNIQUE INDEX todo_attributes_att ON todo_attributes ("_obj", "_type", "_att");
+
+# ---
+
 CREATE TABLE todo_emails
 (
     "_id"                  INTEGER       NOT NULL
