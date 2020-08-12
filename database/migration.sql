@@ -220,6 +220,25 @@ CREATE UNIQUE INDEX todo_role_permissions_sub ON todo_role_permissions ("_sup", 
 
 # ---
 
+CREATE TABLE todo_settings
+(
+    "_id"                  INTEGER       NOT NULL
+        CONSTRAINT todo_setting
+            PRIMARY KEY autoincrement,
+
+    "_type"                VARCHAR  (32) NOT NULL,
+    "_obj"        UNSIGNED INTEGER       NOT NULL,
+    "_att"                 VARCHAR  (64) NOT NULL,
+    "value"                TEXT          NOT NULL,
+    "_created_at"          DATETIME      NOT NULL,
+    "_updated_at"          DATETIME,
+    "_deleted_at"          DATETIME
+);
+
+CREATE UNIQUE INDEX todo_settings_att ON todo_settings ("_obj", "_type", "_att");
+
+# ---
+
 CREATE TABLE todo_teams
 (
     "_id"                  INTEGER       NOT NULL
