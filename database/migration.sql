@@ -612,6 +612,33 @@ CREATE INDEX todo_activities_end_date   ON todo_activities ("end_date" DESC);
 
 # ---
 
+CREATE TABLE todo_logs
+(
+    "_id"                  INTEGER        NOT NULL
+        CONSTRAINT todo_log
+            PRIMARY KEY autoincrement,
+
+    "_type"                VARCHAR  ( 32) NOT NULL,
+    "_obj"        UNSIGNED INTEGER        NOT NULL,
+    "_uid"        UNSIGNED INTEGER        NOT NULL
+        CONSTRAINT todo_log_uid
+            REFERENCES todo_users
+                ON UPDATE restrict
+                ON DELETE restrict,
+
+    "_verb"                VARCHAR  (  4) NOT NULL,
+    "_att"                 VARCHAR  ( 32) NOT NULL,
+    "value"                TEXT           NOT NULL,
+    "_created_at"          DATETIME       NOT NULL,
+    "_updated_at"          DATETIME,
+    "_deleted_at"          DATETIME
+);
+
+CREATE INDEX todo_logs_uid ON todo_logs ("_uid");
+CREATE INDEX todo_logs_att ON todo_logs ("_obj", "_type", "_att");
+
+# ---
+
 CREATE TABLE todo_notifications
 (
     "_id"                  INTEGER        NOT NULL
