@@ -392,13 +392,13 @@ INSERT INTO todo_administrative_divisions (
 # ---
 
 INSERT INTO todo_emails (
-    _type, _obj, _str, verified_at
+    _type, _obj, verified_at, name
 
-) VALUES ('Person', 1, 'github@jmanuelemus.com', CURRENT_TIMESTAMP);
+) VALUES ('Person', 1, CURRENT_TIMESTAMP, 'github@jmanuelemus.com');
 
 # ---
 
-INSERT INTO todo_people(
+INSERT INTO todo_people (
     verified_at, given_name, family_name, alternate_name
 
 ) VALUES (CURRENT_TIMESTAMP, 'Juan Manuel', 'Lemus Ponciano', 'Juanma');
@@ -420,6 +420,6 @@ INSERT INTO todo_users (
 # ---
 
 INSERT INTO todo_projects (
-    _type, _obj, _uid, start_date, name, description
+    _type, _obj, start_date, name, description
 
-) VALUES ('User', 1, 1, datetime('2020-08-07 16:00:00'), 'todo-sqlite', 'A ToDo sample application to teach about SQLite.');
+) VALUES ('User', 1, datetime('2020-08-07 16:00:00'), 'todo-sqlite', 'A ToDo sample application to teach about SQLite.');

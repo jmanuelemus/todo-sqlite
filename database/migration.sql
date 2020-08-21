@@ -56,16 +56,16 @@ CREATE INDEX todo_administrative_divisions_type ON todo_administrative_divisions
 
 CREATE TABLE todo_api_keys
 (
-    "_id"          INTEGER         NOT NULL
+    "_id"            INTEGER         NOT NULL
         CONSTRAINT todo_api_key
             PRIMARY KEY autoincrement,
 
-    "_str"         VARCHAR   (128) NOT NULL,
-    "activated_at" TIMESTAMP,
-    "name"         VARCHAR   ( 32) NOT NULL,
-    "_created_at"  TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "_updated_at"  TIMESTAMP,
-    "_deleted_at"  TIMESTAMP
+    "_str"           VARCHAR   (128) NOT NULL,
+    "date_published" TIMESTAMP,
+    "name"           VARCHAR   ( 32) NOT NULL,
+    "_created_at"    TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "_updated_at"    TIMESTAMP,
+    "_deleted_at"    TIMESTAMP
 );
 
 CREATE UNIQUE INDEX todo_api_keys_str ON todo_api_keys ("_str");
@@ -99,14 +99,14 @@ CREATE TABLE todo_emails
 
     "_type"                VARCHAR   (32) NOT NULL,
     "_obj"        UNSIGNED INTEGER        NOT NULL,
-    "_str"                 VARCHAR   (64) NOT NULL,
     "verified_at"          TIMESTAMP,
+    "name"                 VARCHAR   (64) NOT NULL,
     "_created_at"          TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "_updated_at"          TIMESTAMP,
     "_deleted_at"          TIMESTAMP
 );
 
-CREATE UNIQUE INDEX todo_emails_str ON todo_emails ("_str");
+CREATE UNIQUE INDEX todo_emails_str ON todo_emails ("name");
 
 CREATE INDEX todo_emails_type ON todo_emails ("_obj", "_type");
 
@@ -291,7 +291,6 @@ CREATE TABLE todo_teams
 
     "_type"                VARCHAR   (32) NOT NULL,
     "_obj"        UNSIGNED INTEGER        NOT NULL,
-    "_name"                VARCHAR   (64) NOT NULL,
     "name"                 VARCHAR   (64) NOT NULL,
     "_created_at"          TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "_updated_at"          TIMESTAMP,
@@ -400,23 +399,23 @@ CREATE INDEX todo_addresses_address_1        ON todo_addresses ("_geo", "address
 
 CREATE TABLE todo_api_clients
 (
-    "_id"                    INTEGER        NOT NULL
+    "_id"                     INTEGER        NOT NULL
         CONSTRAINT todo_api_client
             PRIMARY KEY autoincrement,
 
-    "_sup"          UNSIGNED INTEGER
+    "_sup"           UNSIGNED INTEGER
         CONSTRAINT todo_api_client_vendor
             REFERENCES todo_users
                 ON UPDATE restrict
                 ON DELETE restrict,
 
-    "published_at"           TIMESTAMP,
-    "client_id"              VARCHAR   (32) NOT NULL,
-    "client_secret"          VARCHAR   (64) NOT NULL,
-    "name"                   VARCHAR   (64) NOT NULL,
-    "_created_at"            TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "_updated_at"            TIMESTAMP,
-    "_deleted_at"            TIMESTAMP
+    "date_published"          TIMESTAMP,
+    "client_id"               VARCHAR   (32) NOT NULL,
+    "client_secret"           VARCHAR   (64) NOT NULL,
+    "name"                    VARCHAR   (64) NOT NULL,
+    "_created_at"             TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "_updated_at"             TIMESTAMP,
+    "_deleted_at"             TIMESTAMP
 );
 
 CREATE UNIQUE INDEX todo_api_clients_id   ON todo_api_clients ("client_id");
@@ -442,8 +441,8 @@ CREATE TABLE todo_api_tokens
                 ON UPDATE restrict
                 ON DELETE restrict,
 
+    "_int"                     INTEGER         NOT NULL,
     "_str"                     VARCHAR   (128) NOT NULL,
-    "code"                     INTEGER         NOT NULL,
     "expiration_date"          TIMESTAMP       NOT NULL,
     "_created_at"              TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "_updated_at"              TIMESTAMP,
@@ -529,7 +528,7 @@ CREATE TABLE todo_places
                 ON UPDATE restrict
                 ON DELETE restrict,
 
-    "_sup"                      UNSIGNED INTEGER
+    "_in"                       UNSIGNED INTEGER
         CONSTRAINT todo_place_contained_in_place
             REFERENCES todo_places
                 ON UPDATE restrict
@@ -537,6 +536,8 @@ CREATE TABLE todo_places
 
     "_lft"                               INTEGER,
     "_rgt"                               INTEGER,
+    "_kls"                               VARCHAR   (    32),
+    "_sup"                               INTEGER,
     "_type"                              VARCHAR   (    32),
     "_obj"                      UNSIGNED INTEGER,
     "_lat"                               DECIMAL   (8,   6),
@@ -544,12 +545,6 @@ CREATE TABLE todo_places
     "_adr"                      UNSIGNED INTEGER
         CONSTRAINT todo_place_address
             REFERENCES todo_addresses
-                ON UPDATE restrict
-                ON DELETE restrict,
-
-    "_uid"                      UNSIGNED INTEGER
-        CONSTRAINT todo_place_uid
-            REFERENCES todo_users
                 ON UPDATE restrict
                 ON DELETE restrict,
 
@@ -566,14 +561,14 @@ CREATE TABLE todo_places
     "_deleted_at"                        TIMESTAMP
 );
 
-CREATE UNIQUE INDEX todo_places_identifier ON todo_places ("_uid", "_type", "identifier");
+CREATE UNIQUE INDEX todo_places_identifier ON todo_places ("_sup", "_kls", "_type", "identifier");
 
 CREATE INDEX todo_places_eq              ON todo_places ("_eq");
-CREATE INDEX todo_places_sup             ON todo_places ("_sup");
+CREATE INDEX todo_places_in              ON todo_places ("_in");
+CREATE INDEX todo_places_kls             ON todo_places ("_sup", "_kls");
 CREATE INDEX todo_places_type            ON todo_places ("_type");
 CREATE INDEX todo_places_adr             ON todo_places ("_adr");
 CREATE INDEX todo_places_lat_lon         ON todo_places ("_lat", "_lon");
-CREATE INDEX todo_places_uid             ON todo_places ("_uid");
 CREATE INDEX todo_places_additional_type ON todo_places ("additional_type");
 CREATE INDEX todo_places_name            ON todo_places ("name");
 CREATE INDEX todo_places_alternate_name  ON todo_places ("alternate_name");
@@ -595,12 +590,6 @@ CREATE TABLE todo_activities
                 ON UPDATE restrict
                 ON DELETE restrict,
 
-    "_uid"        UNSIGNED INTEGER         NOT NULL
-        CONSTRAINT todo_activity_uid
-            REFERENCES todo_users
-                ON UPDATE restrict
-                ON DELETE restrict,
-
     "start_date"           DATETIME,
     "end_date"             DATETIME,
     "name"                 VARCHAR   (128) NOT NULL,
@@ -614,7 +603,6 @@ CREATE UNIQUE INDEX todo_activities_name ON todo_activities ("_obj", "_type", "n
 
 CREATE INDEX todo_activities_pos        ON todo_activities ("_obj", "_type", "_pos");
 CREATE INDEX todo_activities_geo        ON todo_activities ("_geo");
-CREATE INDEX todo_activities_uid        ON todo_activities ("_uid");
 CREATE INDEX todo_activities_start_date ON todo_activities ("start_date");
 CREATE INDEX todo_activities_end_date   ON todo_activities ("end_date" DESC);
 
@@ -626,14 +614,14 @@ CREATE TABLE todo_logs
         CONSTRAINT todo_log
             PRIMARY KEY autoincrement,
 
-    "_type"                VARCHAR   ( 32) NOT NULL,
-    "_obj"        UNSIGNED INTEGER         NOT NULL,
-    "_uid"        UNSIGNED INTEGER         NOT NULL
-        CONSTRAINT todo_log_uid
+    "_sup"        UNSIGNED INTEGER         NOT NULL
+        CONSTRAINT todo_log_sup
             REFERENCES todo_users
                 ON UPDATE restrict
                 ON DELETE restrict,
 
+    "_type"                VARCHAR   ( 32) NOT NULL,
+    "_obj"        UNSIGNED INTEGER         NOT NULL,
     "_verb"                VARCHAR   (  4) NOT NULL,
     "_att"                 VARCHAR   ( 32) NOT NULL,
     "value"                TEXT            NOT NULL,
@@ -642,7 +630,7 @@ CREATE TABLE todo_logs
     "_deleted_at"          TIMESTAMP
 );
 
-CREATE INDEX todo_logs_uid ON todo_logs ("_uid");
+CREATE INDEX todo_logs_uid ON todo_logs ("_sup");
 CREATE INDEX todo_logs_att ON todo_logs ("_obj", "_type", "_att");
 
 # ---
@@ -742,12 +730,6 @@ CREATE TABLE todo_projects
                 ON UPDATE restrict
                 ON DELETE restrict,
 
-    "_uid"        UNSIGNED INTEGER         NOT NULL
-        CONSTRAINT todo_project_uid
-            REFERENCES todo_users
-                ON UPDATE restrict
-                ON DELETE restrict,
-
     "start_date"           DATETIME,
     "end_date"             DATETIME,
     "name"                 VARCHAR   (128) NOT NULL,
@@ -760,7 +742,6 @@ CREATE TABLE todo_projects
 CREATE UNIQUE INDEX todo_projects_name ON todo_projects ("_obj", "_type", "name");
 
 CREATE INDEX todo_projects_geo        ON todo_projects ("_geo");
-CREATE INDEX todo_projects_uid        ON todo_projects ("_uid");
 CREATE INDEX todo_projects_start_date ON todo_projects ("start_date");
 CREATE INDEX todo_projects_end_date   ON todo_projects ("end_date" DESC);
 
@@ -771,12 +752,6 @@ CREATE TABLE todo_reminders
     "_id"                  INTEGER         NOT NULL
         CONSTRAINT todo_reminder
             PRIMARY KEY autoincrement,
-
-    "_sup"        UNSIGNED INTEGER         NOT NULL
-        CONSTRAINT todo_task_uid
-            REFERENCES todo_users
-                ON UPDATE restrict
-                ON DELETE restrict,
 
     "_type"                VARCHAR   ( 32) NOT NULL,
     "_obj"        UNSIGNED INTEGER         NOT NULL,
@@ -793,7 +768,6 @@ CREATE TABLE todo_reminders
     "_deleted_at"          TIMESTAMP
 );
 
-CREATE INDEX todo_reminders_sup      ON todo_reminders ("_sup");
 CREATE INDEX todo_reminders_obj      ON todo_reminders ("_obj", "_type");
 CREATE INDEX todo_reminders_geo      ON todo_reminders ("_geo");
 CREATE INDEX todo_reminders_due_date ON todo_reminders ("_sup", "due_date");
@@ -815,11 +789,6 @@ CREATE TABLE todo_tasks
                 ON UPDATE restrict
                 ON DELETE restrict,
     
-    "_uid"        UNSIGNED INTEGER         NOT NULL
-        CONSTRAINT todo_task_uid
-            REFERENCES todo_users
-                ON UPDATE restrict
-                ON DELETE restrict,
 
     "start_date"           DATETIME,
     "end_date"             DATETIME,
@@ -834,7 +803,6 @@ CREATE UNIQUE INDEX todo_tasks_name ON todo_tasks ("_obj", "_type", "name");
 
 CREATE INDEX todo_tasks_pos        ON todo_tasks ("_obj", "_type", "_pos");
 CREATE INDEX todo_tasks_geo        ON todo_tasks ("_geo");
-CREATE INDEX todo_tasks_uid        ON todo_tasks ("_uid");
 CREATE INDEX todo_tasks_start_date ON todo_tasks ("start_date");
 CREATE INDEX todo_tasks_end_date   ON todo_tasks ("end_date" DESC);
 
