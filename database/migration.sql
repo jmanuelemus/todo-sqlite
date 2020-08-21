@@ -1,3 +1,26 @@
+CREATE TABLE todo_access_tokens
+(
+    "_id"                      INTEGER       NOT NULL
+        CONSTRAINT todo_access_token
+            PRIMARY KEY autoincrement,
+
+    "_type"                    VARCHAR ( 32) NOT NULL,
+    "_obj"            UNSIGNED INTEGER       NOT NULL,
+    "_int"            UNSIGNED INTEGER       NOT NULL,
+    "_str"                     VARCHAR (128) NOT NULL,
+    "expiration_date"          DATETIME      NOT NULL,
+    "_created_at"              DATETIME      NOT NULL,
+    "_updated_at"              DATETIME,
+    "_deleted_at"              DATETIME
+);
+
+CREATE UNIQUE INDEX todo_access_tokens_str ON todo_access_tokens ("_str");
+
+CREATE INDEX todo_access_tokens_obj             ON todo_access_tokens ("_obj", "_type");
+CREATE INDEX todo_access_tokens_expiration_date ON todo_access_tokens ("expiration_date" DESC);
+
+# ---
+
 CREATE TABLE todo_administrative_divisions
 (
     "_id"                      INTEGER          NOT NULL
