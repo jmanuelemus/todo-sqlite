@@ -423,3 +423,13 @@ INSERT INTO todo_projects (
     _type, _obj, start_date, name, description
 
 ) VALUES ('User', 1, datetime('2020-08-07 16:00:00'), 'todo-sqlite', 'A ToDo sample application to teach about SQLite.');
+
+# ---
+
+INSERT INTO todo_boards (
+    _sup, _pos, name, _created_at
+
+) VALUES
+    (1, 1, 'ToDo', CURRENT_TIMESTAMP),
+    (1, 2, 'Doing', CURRENT_TIMESTAMP),
+    (1, 3, 'Done', CURRENT_TIMESTAMP);
