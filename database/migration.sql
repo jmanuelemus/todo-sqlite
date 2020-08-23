@@ -675,28 +675,6 @@ CREATE INDEX todo_notifications_created_at ON todo_notifications ("_sup", "_crea
 
 # ---
 
-CREATE TABLE todo_passwords
-(
-    "_id"                  INTEGER         NOT NULL
-        CONSTRAINT todo_password
-            PRIMARY KEY autoincrement,
-
-    "_sup"        UNSIGNED INTEGER         NOT NULL
-        CONSTRAINT todo_password_sup
-            REFERENCES todo_users
-                ON UPDATE restrict
-                ON DELETE restrict,
-
-    "_str"                 VARCHAR   (255) NOT NULL,
-    "_created_at"          TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "_updated_at"          TIMESTAMP,
-    "_deleted_at"          TIMESTAMP
-);
-
-CREATE INDEX todo_passwords_sup ON todo_passwords ("_sup");
-
-# ---
-
 CREATE TABLE todo_password_resets
 (
     "_id"                      INTEGER         NOT NULL
@@ -720,6 +698,28 @@ CREATE TABLE todo_password_resets
 CREATE UNIQUE INDEX todo_password_resets_token ON todo_password_resets ("token");
 
 CREATE INDEX todo_password_resets_sup ON todo_password_resets ("_sup");
+
+# ---
+
+CREATE TABLE todo_passwords
+(
+    "_id"                  INTEGER         NOT NULL
+        CONSTRAINT todo_password
+            PRIMARY KEY autoincrement,
+
+    "_sup"        UNSIGNED INTEGER         NOT NULL
+        CONSTRAINT todo_password_sup
+            REFERENCES todo_users
+                ON UPDATE restrict
+                ON DELETE restrict,
+
+    "_str"                 VARCHAR   (255) NOT NULL,
+    "_created_at"          TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "_updated_at"          TIMESTAMP,
+    "_deleted_at"          TIMESTAMP
+);
+
+CREATE INDEX todo_passwords_sup ON todo_passwords ("_sup");
 
 # ---
 
