@@ -283,6 +283,41 @@ CREATE UNIQUE INDEX todo_settings_att ON todo_settings ("_obj", "_type", "_att")
 
 # ---
 
+CREATE TABLE todo_schedules
+(
+    "_id"                    INTEGER        NOT NULL
+        CONSTRAINT todo_schedule
+            PRIMARY KEY autoincrement,
+
+    "_type"                  VARCHAR   (32) NOT NULL,
+    "_obj"          UNSIGNED INTEGER        NOT NULL,
+    "start_date"             DATE,
+    "start_time"             TIME,
+    "by_day"        UNSIGNED INTEGER,
+    "by_month"      UNSIGNED INTEGER,
+    "by_month_day"  UNSIGNED INTEGER,
+    "by_month_week" UNSIGNED INTEGER,
+    "end_date"               DATE,
+    "end_time"               DATE,
+    "_created_at"            TIMESTAMP      NOT NULL,
+    "_updated_at"            TIMESTAMP,
+    "_deleted_at"            TIMESTAMP
+);
+
+CREATE INDEX todo_schedules_type           ON todo_schedules (_obj, _type);
+CREATE INDEX todo_schedules_start_date     ON todo_schedules (start_date DESC);
+CREATE INDEX todo_schedules_start_time     ON todo_schedules (start_time);
+CREATE INDEX todo_schedules_start_datetime ON todo_schedules (start_date DESC, start_time);
+CREATE INDEX todo_schedules_by_day         ON todo_schedules (by_day);
+CREATE INDEX todo_schedules_by_month       ON todo_schedules (by_month);
+CREATE INDEX todo_schedules_by_month_day   ON todo_schedules (by_month_day);
+CREATE INDEX todo_schedules_by_month_week  ON todo_schedules (by_month_week);
+CREATE INDEX todo_schedules_end_date       ON todo_schedules (end_date);
+CREATE INDEX todo_schedules_end_time       ON todo_schedules (end_time);
+CREATE INDEX todo_schedules_end_datetime   ON todo_schedules (end_date, end_time);
+
+# ---
+
 CREATE TABLE todo_teams
 (
     "_id"                  INTEGER        NOT NULL
@@ -808,6 +843,33 @@ CREATE INDEX todo_reminders_sup      ON todo_reminders ("_sup");
 CREATE INDEX todo_reminders_obj      ON todo_reminders ("_obj", "_type");
 CREATE INDEX todo_reminders_geo      ON todo_reminders ("_geo");
 CREATE INDEX todo_reminders_due_date ON todo_reminders ("_sup", "due_date");
+
+# ---
+
+CREATE TABLE todo_tags
+(
+    "_id"                  INTEGER        NOT NULL
+        CONSTRAINT todo_tag
+            PRIMARY KEY,
+
+    "_sup"        UNSIGNED INTEGER        NOT NULL
+        CONSTRAINT todo_tag_sup
+            REFERENCES todo_users
+                ON UPDATE restrict
+                ON DELETE restrict,
+
+    "_type"                VARCHAR   (32) NOT NULL,
+    "_obj"        UNSIGNED INTEGER        NOT NULL,
+    "name"                 VARCHAR   (32) NOT NULL,
+    "_created_at"          TIMESTAMP      NOT NULL,
+    "_updated_at"          TIMESTAMP,
+    "_deleted_at"          TIMESTAMP
+);
+
+CREATE UNIQUE INDEX todo_tags_type_name ON todo_tags ("_obj", "_type", "name");
+
+CREATE INDEX todo_tags_sup  ON todo_tags ("_sup");
+CREATE INDEX todo_tags_name ON todo_tags ("name");
 
 # ---
 
