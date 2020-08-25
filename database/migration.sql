@@ -490,6 +490,31 @@ CREATE INDEX todo_api_tokens_expiration_date ON todo_api_tokens ("expiration_dat
 
 # ---
 
+CREATE TABLE todo_assignments
+(
+    "_id"                  INTEGER        NOT NULL
+        CONSTRAINT todo_assigment
+            PRIMARY KEY autoincrement,
+
+    "_sup"        UNSIGNED INTEGER        NOT NULL
+        CONSTRAINT todo_assigment_sup
+            REFERENCES todo_users
+                ON UPDATE restrict
+                ON DELETE restrict,
+
+    "_type"                VARCHAR   (32) NOT NULL,
+    "_obj"        UNSIGNED INTEGER        NOT NULL,
+    "_created_at"          TIMESTAMP      NOT NULL,
+    "_updated_at"          TIMESTAMP,
+    "_deleted_at"          TIMESTAMP
+);
+
+CREATE UNIQUE INDEX todo_assignments_type_sup ON todo_assignments ("_obj", "_type", "_sup");
+
+CREATE INDEX todo_assignments_sup ON todo_assignments ("_sup");
+
+# ---
+
 CREATE TABLE todo_comments
 (
     "_id"                  INTEGER   NOT NULL
